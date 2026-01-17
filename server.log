@@ -1,0 +1,9 @@
+[INFO] Server started at port 8080
+[INFO] User 123 logged in
+[ERROR] Database connection failed
+[INFO] Retrying connection...
+[ERROR] Timeout waiting for response
+[INFO] User 456 logged in
+[WARN] High memory usage
+[ERROR] Broken pipe
+[INFO] Shutting down
