@@ -4,7 +4,6 @@ import (
 	"bufio"
 	"fmt"
 	"os"
-	"strconv"
 	"strings"
 )
 
@@ -13,27 +12,37 @@ type Logstats struct {
 	errorCount int
 }
 
-func (s *Logstats) CountError(filename string) {
-	file, err := os.Open(filename)
+func (s *Logstats) CountError(lookup string) {
+	file, err := os.Open(s.filename)
+
 	if err != nil {
 		fmt.Println("Error while opening file:", err)
 		return
 	}
-
+	defer file.Close()
 	reader := bufio.NewReader(file)
 
 	for {
 		line, err := reader.ReadString('\n')
-		if err != nil {
-			break
-		} else if strings.Contains(line, "ERROR") {
+		if strings.Contains(line, lookup) {
 			s.errorCount += 1
 		}
+		if err != nil {
+			break
+		}
+
 	}
-	defer file.Close()
-	fmt.Println("they are " + strconv.Itoa(s.errorCount) + " in file")
+	fmt.Printf("they are %d %s in file\n", s.errorCount, lookup)
 }
 func main() {
-	s := Logstats{}
-	s.CountError("server.log")
+	args := os.Args
+	if len(args) < 2 {
+		fmt.Println("invalid length of arguement ")
+		return
+	}
+
+	lookup := args[1]
+
+	s := Logstats{filename: "server.log"}
+	s.CountError(lookup)
 }
